@@ -2,9 +2,18 @@ import 'package:flutter/material.dart';
 import '../providers/active_theme_provider.dart';
 import 'theme_switch.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../services/ai_handler.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const MyAppBar({super.key});
+  MyAppBar({super.key});
+   final AIHandler aiHandler = AIHandler();
+  void _openSession() {
+    aiHandler.openSession();
+  }
+
+  void _closeSession() {
+    aiHandler.closeSession();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +36,14 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
             const SizedBox(width: 8),
             const ThemeSwitch(),
+            const SizedBox(width: 8),
+            GestureDetector(
+              child: Icon(Icons.stop),
+              onTap: (){
+                _closeSession;
+                Navigator.pop(context);
+              },
+              )
           ],
         )
       ],
