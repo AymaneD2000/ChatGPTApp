@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gpt_flutter/screens/home_screen.dart';
 import '../providers/active_theme_provider.dart';
 import 'theme_switch.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,7 +7,7 @@ import '../services/ai_handler.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   MyAppBar({super.key});
-   final AIHandler aiHandler = AIHandler();
+  final AIHandler aiHandler = AIHandler();
   void _openSession() {
     aiHandler.openSession();
   }
@@ -39,11 +40,16 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
             const SizedBox(width: 8),
             GestureDetector(
               child: Icon(Icons.stop),
-              onTap: (){
+              onTap: () {
                 _closeSession;
-                Navigator.pop(context);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomeScreen(),
+                  ),
+                );
               },
-              )
+            )
           ],
         )
       ],

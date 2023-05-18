@@ -11,8 +11,10 @@ enum InputMode {
   voice,
 }
 
+// ignore: must_be_immutable
 class TextAndVoiceField extends ConsumerStatefulWidget {
-  const TextAndVoiceField({super.key});
+  TextAndVoiceField({super.key, required this.id});
+  int id;
 
   @override
   ConsumerState<TextAndVoiceField> createState() => _TextAndVoiceFieldState();
@@ -77,7 +79,7 @@ class _TextAndVoiceFieldState extends ConsumerState<TextAndVoiceField> {
           sendTextMessage: () {
             final message = _messageController.text;
             _messageController.clear();
-            sendTextMessage(message);
+            sendTextMessage(message, widget.id);
           },
           sendVoiceMessage: sendVoiceMessage,
         )
@@ -103,16 +105,16 @@ class _TextAndVoiceFieldState extends ConsumerState<TextAndVoiceField> {
       setListeningState(true);
       final result = await voiceHandler.startListening();
       setListeningState(false);
-      sendTextMessage(result);
+      sendTextMessage(result, widget.id);
     }
   }
 
-  void sendTextMessage(String message) async {
+  void sendTextMessage(String message, int sessionId) async {
     setReplyingState(true);
     addToChatList(message, true, DateTime.now().toString());
     addToChatList('Typing...', false, 'typing');
     setInputMode(InputMode.voice);
-    final aiResponse = await _openAI.getResponse(message);
+    final aiResponse = await _openAI.getResponse(message, sessionId);
     removeTyping();
     addToChatList(aiResponse, false, DateTime.now().toString());
     setReplyingState(false);
