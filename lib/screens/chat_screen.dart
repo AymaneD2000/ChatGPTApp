@@ -7,9 +7,11 @@ import '../widgets/chat_item.dart';
 import '../widgets/my_app_bar.dart';
 import '../widgets/text_and_voice_field.dart';
 
+// ignore: must_be_immutable
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+  ChatScreen({super.key, required this.sessionId});
   static const String id = 'chat';
+  int sessionId;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -19,17 +21,15 @@ class _ChatScreenState extends State<ChatScreen> {
   final AIHandler aiHandler = AIHandler();
 
   @override
-void dispose() {
-  aiHandler.closeSession();
-  super.dispose();
-}
-
+  void dispose() {
+    aiHandler.closeSession();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: MyAppBar(
-        ),
+        appBar: MyAppBar(),
         body: Column(
           children: [
             Expanded(
@@ -45,9 +45,11 @@ void dispose() {
                 );
               }),
             ),
-            const Padding(
+            Padding(
               padding: EdgeInsets.all(12.0),
-              child: TextAndVoiceField(),
+              child: TextAndVoiceField(
+                id: widget.sessionId,
+              ),
             ),
             const SizedBox(
               height: 10,

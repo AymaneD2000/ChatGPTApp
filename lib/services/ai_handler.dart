@@ -28,17 +28,17 @@ class AIHandler {
     ),
   );
 
-  Future<String> getResponse(String message) async {
+  Future<String> getResponse(String message, int sessionId) async {
     try {
       final request = ChatCompleteText(messages: [
         Map.of({"role": "user", "content": message})
       ], maxToken: 200, model: ChatModel.gptTurbo0301);
-      final rep = request.messages[0].values;
+      //final rep = request.messages[0].values;
       final response = await _openAI.onChatCompletion(request: request);
       if (response != null) {
         String reply = response.choices[0].message!.content.trim();
         List<String> session = [message, reply];
-        await _databaseManager.saveSession(session);
+        await _databaseManager.saveSession(session, sessionId);
         return reply;
       }
 
