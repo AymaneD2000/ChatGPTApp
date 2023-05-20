@@ -31,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-          builder: (context) => ChatScreen(sessionId: session.id)),
+          builder: (context) => ChatScreen(null, sessionId: session.id)),
     ).then((value) {
       if (!aiHandler.isSessionOpen) {
         aiHandler.openSession();
@@ -158,8 +158,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           .where((session) =>
                               session.last == globalSessionId.toString())
                           .toList();
+
                       final lastUserMessage = session.first.first;
-                      final lastReply = session.first.last;
+                      final lastReply = session.first[1];
 
                       return Card(
                         child: ListTile(
@@ -178,6 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ChatScreen(
+                                  null,
                                   sessionId: globalSessionId,
                                 ),
                               ),

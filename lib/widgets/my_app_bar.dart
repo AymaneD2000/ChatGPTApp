@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gpt_flutter/providers/Database_Manager.dart';
 import 'package:gpt_flutter/screens/home_screen.dart';
 import '../providers/active_theme_provider.dart';
 import 'theme_switch.dart';
@@ -6,8 +7,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/ai_handler.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
-  MyAppBar({super.key});
+  int sessionId;
+  MyAppBar({super.key, required this.sessionId});
   final AIHandler aiHandler = AIHandler();
+  final db = DatabaseManager.instance;
   void _openSession() {
     aiHandler.openSession();
   }
@@ -40,8 +43,23 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
             const SizedBox(width: 8),
             GestureDetector(
               child: Icon(Icons.stop),
-              onTap: () {
+              onTap: () async {
+                print("getting");
+                await aiHandler.getResponse("getList", sessionId);
+                print("got it");
+                final result = await db.getSessionForGlobal(sessionId);
+
+                if (result == 0) {
+                  try {
+                    await db.deleteGlobalSession(sessionId);
+                  } catch (e) {
+                    print(e);
+                  }
+                } else {
+                  print("Saved");
+                }
                 _closeSession;
+                // ignore: use_build_context_synchronously
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
