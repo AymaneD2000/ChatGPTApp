@@ -25,7 +25,7 @@ class AIHandler {
   }
 
   final _openAI = OpenAI.instance.build(
-    token: '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',
+    token: '',
     baseOption: HttpSetup(
       receiveTimeout: const Duration(seconds: 60),
       connectTimeout: const Duration(seconds: 60),
@@ -53,6 +53,7 @@ class AIHandler {
 
         String listToJson = jsonEncode(list);
         print("La liste en format Json $listToJson");
+        //mise a jour de la liste dans la base de donnees
         await _databaseManager.deleteSessionListe(sessionId);
         await _databaseManager.saveSessionListe(listToJson, sessionId);
         var lister = await _databaseManager.getAllSessionsListe(sessionId);
