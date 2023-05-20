@@ -9,8 +9,9 @@ import '../widgets/text_and_voice_field.dart';
 
 // ignore: must_be_immutable
 class ChatScreen extends StatefulWidget {
-  ChatScreen({super.key, required this.sessionId});
+  ChatScreen(this.list, {super.key, required this.sessionId});
   static const String id = 'chat';
+  List<Map<String, String>>? list;
   int sessionId;
 
   @override
@@ -29,7 +30,9 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: MyAppBar(),
+        appBar: MyAppBar(
+          sessionId: widget.sessionId,
+        ),
         body: Column(
           children: [
             Expanded(
