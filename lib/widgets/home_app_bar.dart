@@ -12,8 +12,10 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(
-        'Home Screen',
+        'Zetron - AI',
         style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 25,
           color: Theme.of(context).colorScheme.onPrimary,
         ),
       ),

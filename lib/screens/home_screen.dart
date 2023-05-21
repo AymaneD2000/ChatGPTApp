@@ -30,9 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _openSession() async {
-    if (!aiHandler.isSessionOpen) {
-      aiHandler.openSession();
-    }
     int id = await _databaseManager.saveGlobalSession('sessionName');
     Session session = Session(id: id, name: 'sessionName');
     Navigator.pushReplacement(
@@ -42,11 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
           sessionId: session.id,
         ),
       ),
-    ).then((value) {
-      if (!aiHandler.isSessionOpen) {
-        aiHandler.openSession();
-      }
-    });
+    );
   }
 
   void _reconnectToSession(List<Discussion> session, int id) async {

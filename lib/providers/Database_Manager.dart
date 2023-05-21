@@ -135,7 +135,7 @@ class DatabaseManager {
   Future<void> deleteGlobalSession(int sid) async {
     final db = await database;
     try {
-      final id = await db.delete(global, where: 'id=?', whereArgs: [sid]);
+      await db.delete(global, where: 'id=?', whereArgs: [sid]);
       print("Supprimer avec succes");
     } catch (e) {
       print("Erreur lors de la suppression de  GlobalSession");
