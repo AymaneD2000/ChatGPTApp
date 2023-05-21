@@ -36,13 +36,13 @@ class _ChatScreenState extends State<ChatScreen> {
       for (final element in widget.list!) {
         list.add(ChatModel(
           id: element.id.toString(),
-          message: element.aiReply,
-          isMe: false,
+          message: element.userMessage,
+          isMe: true,
         ));
         list.add(ChatModel(
           id: element.id.toString(),
-          message: element.userMessage,
-          isMe: true,
+          message: element.aiReply,
+          isMe: false,
         ));
       }
     }
@@ -58,7 +58,7 @@ class _ChatScreenState extends State<ChatScreen> {
             child: Consumer(builder: (context, ref, child) {
               final chats = ref.watch(chatsProvider).reversed.toList();
               if (list != null && list != []) {
-                chats.addAll(list);
+                chats.addAll(list.reversed);
               }
               return ListView.builder(
                 reverse: true,
