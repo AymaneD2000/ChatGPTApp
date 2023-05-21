@@ -58,6 +58,10 @@ class _ChatScreenState extends State<ChatScreen> {
             child: Consumer(builder: (context, ref, child) {
               final chats = ref.watch(chatsProvider).reversed.toList();
               if (list != null && list != []) {
+                // list.forEach((element) {
+                //   if (element.isMe == true)
+                //     aiHandler.getResponse(element.message, widget.sessionId);
+                // });
                 chats.addAll(list.reversed);
               }
               return ListView.builder(

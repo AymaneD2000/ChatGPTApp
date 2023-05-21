@@ -41,9 +41,11 @@ class AIHandler {
 
       //Map.of({"role": "user", "content": message})
       final request = ChatCompleteText(
-          messages: list, maxToken: 300, model: ChatModel.gptTurbo0301);
+          messages: list, maxToken: 800, model: ChatModel.gptTurbo0301);
       //final rep = request.messages[0].values;
       final response = await _openAI.onChatCompletion(request: request);
+      int k = 0;
+      print(response);
       if (response != null) {
         String reply = response.choices[0].message!.content.trim();
         List<String> session = [message, reply];

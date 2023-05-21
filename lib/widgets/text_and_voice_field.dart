@@ -11,10 +11,10 @@ enum InputMode {
   voice,
 }
 
-// ignore: must_be_immutable
 class TextAndVoiceField extends ConsumerStatefulWidget {
-  TextAndVoiceField({super.key, required this.id});
-  int id;
+  final int id;
+
+  const TextAndVoiceField({Key? key, required this.id}) : super(key: key);
 
   @override
   ConsumerState<TextAndVoiceField> createState() => _TextAndVoiceFieldState();
@@ -24,13 +24,13 @@ class _TextAndVoiceFieldState extends ConsumerState<TextAndVoiceField> {
   InputMode _inputMode = InputMode.voice;
   final _messageController = TextEditingController();
   final AIHandler _openAI = AIHandler();
-  final VoiceHandler voiceHandler = VoiceHandler();
-  var _isReplying = false;
-  var _isListening = false;
+  final VoiceHandler _voiceHandler = VoiceHandler();
+  bool _isReplying = false;
+  bool _isListening = false;
 
   @override
   void initState() {
-    voiceHandler.initSpeech();
+    _voiceHandler.initSpeech();
     super.initState();
   }
 
@@ -43,47 +43,51 @@ class _TextAndVoiceFieldState extends ConsumerState<TextAndVoiceField> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: TextField(
-            controller: _messageController,
-            onChanged: (value) {
-              value.isNotEmpty
-                  ? setInputMode(InputMode.text)
-                  : setInputMode(InputMode.voice);
-            },
-            cursorColor: Theme.of(context).colorScheme.onPrimary,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Theme.of(context).colorScheme.onPrimary,
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.1,
+      child: Row(
+        children: [
+          Flexible(
+            child: TextField(
+              showCursor: true,
+              expands: true,
+              maxLines: null,
+              controller: _messageController,
+              onChanged: (value) {
+                value.isNotEmpty
+                    ? setInputMode(InputMode.text)
+                    : setInputMode(InputMode.voice);
+              },
+              cursorColor: Theme.of(context).colorScheme.onPrimary,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                borderRadius: BorderRadius.circular(
-                  12,
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
             ),
           ),
-        ),
-        const SizedBox(
-          width: 06,
-        ),
-        ToggleButton(
-          isListening: _isListening,
-          isReplying: _isReplying,
-          inputMode: _inputMode,
-          sendTextMessage: () {
-            final message = _messageController.text;
-            _messageController.clear();
-            sendTextMessage(message, widget.id);
-          },
-          sendVoiceMessage: sendVoiceMessage,
-        )
-      ],
+          const SizedBox(
+            width: 6,
+          ),
+          ToggleButton(
+            isListening: _isListening,
+            isReplying: _isReplying,
+            inputMode: _inputMode,
+            sendTextMessage: () {
+              final message = _messageController.text;
+              _messageController.clear();
+              sendTextMessage(message, widget.id);
+            },
+            sendVoiceMessage: sendVoiceMessage,
+          ),
+        ],
+      ),
     );
   }
 
@@ -93,23 +97,23 @@ class _TextAndVoiceFieldState extends ConsumerState<TextAndVoiceField> {
     });
   }
 
-  void sendVoiceMessage() async {
-    if (!voiceHandler.isEnabled) {
+  Future<void> sendVoiceMessage() async {
+    if (!_voiceHandler.isEnabled) {
       print('Not supported');
       return;
     }
-    if (voiceHandler.speechToText.isListening) {
-      await voiceHandler.stopListening();
+    if (_voiceHandler.speechToText.isListening) {
+      await _voiceHandler.stopListening();
       setListeningState(false);
     } else {
       setListeningState(true);
-      final result = await voiceHandler.startListening();
+      final result = await _voiceHandler.startListening();
       setListeningState(false);
       sendTextMessage(result, widget.id);
     }
   }
 
-  void sendTextMessage(String message, int sessionId) async {
+  Future<void> sendTextMessage(String message, int sessionId) async {
     setReplyingState(true);
     addToChatList(message, true, DateTime.now().toString());
     addToChatList('Typing...', false, 'typing');
@@ -118,7 +122,7 @@ class _TextAndVoiceFieldState extends ConsumerState<TextAndVoiceField> {
     removeTyping();
     addToChatList(aiResponse, false, DateTime.now().toString());
     setReplyingState(false);
-    //ref.read(chatsProvider.notifier).clean();
+    // ref.read(chatsProvider.notifier).clean();
   }
 
   void setReplyingState(bool isReplying) {

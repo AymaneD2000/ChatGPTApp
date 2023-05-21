@@ -18,21 +18,38 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
+class Discussions {
+  String topic;
+  List<String> suggestions;
+  Discussions({required this.topic, required this.suggestions});
+}
+
 class _HomeScreenState extends State<HomeScreen> {
   final AIHandler aiHandler = AIHandler();
   final DatabaseManager _databaseManager = DatabaseManager.instance;
-  late Future<List<Session>> globalSessionsFuture;
 
-  @override
-  void initState() {
-    super.initState();
-    globalSessionsFuture = _databaseManager.getAllGlobalSessions();
-  }
+  List<Discussions> topics = [
+    Discussions(
+      topic: 'Education',
+      suggestions: [
+        'Science chat',
+        'English teacher',
+        'Mathematics help',
+      ],
+    ),
+    Discussions(
+      topic: 'Technology',
+      suggestions: [
+        'Programming discussion',
+        'Gadgets and devices',
+        'AI and Machine Learning',
+      ],
+    ),
+    // Add more topics and suggestions as needed
+  ];
+  List<String> currentSuggestions = [];
 
   void _openSession() async {
-    if (!aiHandler.isSessionOpen) {
-      aiHandler.openSession();
-    }
     int id = await _databaseManager.saveGlobalSession('sessionName');
     Session session = Session(id: id, name: 'sessionName');
     Navigator.pushReplacement(
@@ -42,18 +59,23 @@ class _HomeScreenState extends State<HomeScreen> {
           sessionId: session.id,
         ),
       ),
-    ).then((value) {
-      if (!aiHandler.isSessionOpen) {
-        aiHandler.openSession();
-      }
-    });
+    );
   }
 
-  void _reconnectToSession(List<Discussion> session, int id) async {
-    aiHandler.openSession();
-    for (var message in session) {
-      await Future.delayed(Duration(milliseconds: 500));
-      // await aiHandler.getResponse(message.userMessage, id);
+  void updateSuggestions(String topic) {
+    Discussions? selectedDiscussion = topics.firstWhere(
+      (discussion) => discussion.topic == topic,
+      orElse: () => Discussions(topic: '', suggestions: []),
+    );
+
+    if (selectedDiscussion != null) {
+      setState(() {
+        currentSuggestions = selectedDiscussion.suggestions;
+      });
+    } else {
+      setState(() {
+        currentSuggestions = [];
+      });
     }
   }
 
@@ -68,57 +90,51 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       drawer: DrawerWidget(),
       appBar: HomeAppBar(),
-      body: FutureBuilder<List<Session>>(
-        future: globalSessionsFuture,
-        builder: (context, globalSnapshot) {
-          if (globalSnapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (globalSnapshot.hasError) {
-            return Center(
-              child: Text('An error occurred.'),
-            );
-          } else if (globalSnapshot.hasData) {
-            final globalSessions = globalSnapshot.data!;
-            return ListView.builder(
-              itemCount: globalSessions.length,
+      body: Column(
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.2,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: topics.length,
               itemBuilder: (context, index) {
-                final session = globalSessions[index];
-                final discussions = session.discussions ?? [];
-                final messageUser =
-                    discussions.isNotEmpty ? discussions.first.userMessage : '';
-                final messageIA =
-                    discussions.isNotEmpty ? discussions.first.aiReply : '';
-                return Card(
-                  child: ListTile(
-                    title: Text(session.name),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('User: $messageUser'),
-                        Text('AI Reply: $messageIA'),
-                      ],
+                return GestureDetector(
+                  onTap: () {
+                    updateSuggestions(topics[index].topic);
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    margin: EdgeInsets.all(8),
+                    color: Colors.blue, // Customize as needed
+                    child: Center(
+                      child: Text(
+                        topics[index].topic,
+                        style: TextStyle(
+                          color: Colors.white, // Customize as needed
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                    onTap: () {
-                      _reconnectToSession(discussions, session.id);
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ChatScreen(
-                                list: discussions, sessionId: session.id)),
-                      );
-                    },
                   ),
                 );
               },
-            );
-          } else {
-            return Center(
-              child: Text('No conversation sessions found.'),
-            );
-          }
-        },
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: currentSuggestions.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(currentSuggestions[index]),
+                  onTap: () {
+                    // Handle suggestion selection
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _openSession,
