@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/src/consumer.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:gpt_flutter/providers/Database_Manager.dart';
 import 'package:gpt_flutter/screens/home_screen.dart';
 import '../providers/active_theme_provider.dart';
@@ -31,7 +32,9 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
             final chats = ref.read(chatsProvider.notifier);
             chats.removeTyping();
             return GestureDetector(
-              child: Icon(Icons.stop),
+              child: Icon(
+                Icons.close,
+              ),
               onTap: () async {
                 final chats = ref.read(chatsProvider.notifier);
                 chats.clean();
