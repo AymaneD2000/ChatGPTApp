@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
+import 'package:gpt_flutter/models/Discussion.dart';
 
 import '../providers/Database_Manager.dart';
 
@@ -25,7 +26,7 @@ class AIHandler {
   }
 
   final _openAI = OpenAI.instance.build(
-    token: '',
+    token: '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',
     baseOption: HttpSetup(
       receiveTimeout: const Duration(seconds: 60),
       connectTimeout: const Duration(seconds: 60),
@@ -66,12 +67,9 @@ class AIHandler {
 
       return 'Some thing went wrong';
     } catch (e) {
+      print(e);
       return 'Bad response';
     }
-  }
-
-  Future<List<List<String>>> getConversationSessions() async {
-    return _databaseManager.getAllSessions();
   }
 
   void dispose() {

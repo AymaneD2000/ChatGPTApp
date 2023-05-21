@@ -1,5 +1,9 @@
+import 'package:gpt_flutter/models/Discussion.dart';
+import 'package:gpt_flutter/models/Session.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+
+import '../models/discussion_list_model.dart';
 
 class DatabaseManager {
   int _index = 0;
@@ -151,54 +155,67 @@ class DatabaseManager {
   }
 
 //recuperer la liste de conversation pour un une session globale
-  Future<List<String>> getAllSessionsListe(int id) async {
+  Future<List<DiscussionList>> getAllSessionsListe(int id) async {
     final db = await database;
     final sessions = await db
         .query(sessionsListeTable, where: 'session_id=?', whereArgs: [id]);
-    final List<String> sessionList = [];
+    final listSession = <DiscussionList>[];
+    //final List<String> sessionList = [];
 
     for (final session in sessions) {
-      final liste = session['list'] as String;
-      sessionList.add(liste);
-      print("getAllSessionsListe $liste");
+      final temp = DiscussionList.fromMap(session);
+      temp.discussions = await getSessionForGlobal(id);
+      // final liste = session['list'] as String;
+      // sessionList.add(liste);
+      // print("getAllSessionsListe $liste");
       //sessionList.add([userMessage, aiReply, sessionId]);
     }
-    return sessionList;
+    return listSession;
   }
 
-  Future<List<List<String>>> getAllSessions() async {
+  Future<List<Discussion>> getAllSessions() async {
     final db = await database;
     final sessions = await db.query('sessions');
-    final sessionList = <List<String>>[];
+    final ListSession = <Discussion>[];
+    //final sessionList = <List<String>>[];
     for (final session in sessions) {
-      final userMessage = session['userMessage'] as String;
-      final aiReply = session['aiReply'] as String;
-      final sessionId = session['session_id'].toString();
-      sessionList.add([userMessage, aiReply, sessionId]);
+      ListSession.add(Discussion.fromMap(session));
+      // final userMessage = session['userMessage'] as String;
+      // final aiReply = session['aiReply'] as String;
+      // final sessionId = session['session_id'].toString();
+      // sessionList.add([userMessage, aiReply, sessionId]);
     }
-    return sessionList;
+    return ListSession;
   }
 
-  Future<int> getSessionForGlobal(int id) async {
+  Future<List<Discussion>> getSessionForGlobal(int id) async {
     final db = await database;
     final sessions =
         await db.query(sessionsTable, where: 'session_id=?', whereArgs: [id]);
-    final sessionList = <List<String>>[];
-    int i = 0;
+    final sessionList = <Discussion>[];
+    // int i = 0;
     for (final session in sessions) {
-      final userMessage = session['userMessage'] as String;
-      final aiReply = session['aiReply'] as String;
-      final sessionId = session['session_id'].toString();
-      final sessionI = session['session_id'] as int;
-      i = sessionI;
-      sessionList.add([userMessage, aiReply, sessionId]);
+      final temp = Discussion.fromMap(session);
+      // final userMessage = session['userMessage'] as String;
+      // final aiReply = session['aiReply'] as String;
+      // final sessionId = session['session_id'].toString();
+      // final sessionI = session['session_id'] as int;
+      // i = sessionI;
+      sessionList.add(temp);
     }
 
-    return i;
+    return sessionList;
   }
 
-  Future<List<Map<String, dynamic>>> getAllGlobalSessions() async {
+  Future<List<Session>> getAllGlobalSessions() async {
     final db = await database;
-    return await db.query('Globalsessions');
+    final list = await db.query('Globalsessions');
+    final sessionList = <Session>[];
+    for (final session in list) {
+      final temp = Session.fromMap(session);
+      temp.discussions = await getSessionForGlobal(temp.id);
+      sessionList.add(temp);
+    }
+    return sessionList;
   }
 }

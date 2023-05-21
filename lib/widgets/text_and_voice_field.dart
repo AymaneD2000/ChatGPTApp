@@ -118,6 +118,7 @@ class _TextAndVoiceFieldState extends ConsumerState<TextAndVoiceField> {
     removeTyping();
     addToChatList(aiResponse, false, DateTime.now().toString());
     setReplyingState(false);
+    //ref.read(chatsProvider.notifier).clean();
   }
 
   void setReplyingState(bool isReplying) {
