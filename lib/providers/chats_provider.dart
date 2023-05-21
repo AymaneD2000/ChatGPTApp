@@ -7,6 +7,10 @@ class ChatNotifier extends StateNotifier<List<ChatModel>> {
     state = [...state, chatModel];
   }
 
+  void clean() {
+    state.clear();
+  }
+
   void removeTyping() {
     state = state..removeWhere((chat) => chat.id == 'typing');
   }

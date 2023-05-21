@@ -45,7 +45,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: Icon(Icons.stop),
               onTap: () async {
                 print("getting");
-                await aiHandler.getResponse("getList", sessionId);
+                //await aiHandler.getResponse("getList", sessionId);
                 print("got it");
                 final result = await db.getSessionForGlobal(sessionId);
 

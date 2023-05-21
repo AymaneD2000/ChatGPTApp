@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
+import 'package:gpt_flutter/models/Discussion.dart';
 
 import '../providers/Database_Manager.dart';
 
@@ -66,12 +67,9 @@ class AIHandler {
 
       return 'Some thing went wrong';
     } catch (e) {
+      print(e);
       return 'Bad response';
     }
-  }
-
-  Future<List<List<String>>> getConversationSessions() async {
-    return _databaseManager.getAllSessions();
   }
 
   void dispose() {
