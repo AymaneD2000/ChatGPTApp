@@ -13,8 +13,10 @@ enum InputMode {
 
 class TextAndVoiceField extends ConsumerStatefulWidget {
   final int id;
+  final String? message;
   final List<Map<String, String>>? lastChat;
-  const TextAndVoiceField(this.lastChat, {Key? key, required this.id})
+  const TextAndVoiceField(this.lastChat,
+      {Key? key, this.message, required this.id})
       : super(key: key);
 
   @override
@@ -22,8 +24,8 @@ class TextAndVoiceField extends ConsumerStatefulWidget {
 }
 
 class _TextAndVoiceFieldState extends ConsumerState<TextAndVoiceField> {
-  InputMode _inputMode = InputMode.voice;
-  final _messageController = TextEditingController();
+  late InputMode _inputMode;
+  late TextEditingController _messageController;
   final AIHandler _openAI = AIHandler();
   final VoiceHandler _voiceHandler = VoiceHandler();
   bool _isReplying = false;
@@ -31,8 +33,10 @@ class _TextAndVoiceFieldState extends ConsumerState<TextAndVoiceField> {
 
   @override
   void initState() {
-    _voiceHandler.initSpeech();
     super.initState();
+    _inputMode = InputMode.voice;
+    _messageController = TextEditingController(text: widget.message);
+    _voiceHandler.initSpeech();
   }
 
   @override
@@ -61,6 +65,7 @@ class _TextAndVoiceFieldState extends ConsumerState<TextAndVoiceField> {
               },
               cursorColor: Theme.of(context).colorScheme.onPrimary,
               decoration: InputDecoration(
+                labelText: "As me some thing",
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -79,7 +84,7 @@ class _TextAndVoiceFieldState extends ConsumerState<TextAndVoiceField> {
           ToggleButton(
             isListening: _isListening,
             isReplying: _isReplying,
-            inputMode: _inputMode,
+            inputMode: InputMode.text,
             sendTextMessage: () {
               final message = _messageController.text;
               _messageController.clear();
