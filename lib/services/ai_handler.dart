@@ -12,6 +12,7 @@ class AIHandler {
 
   List<String> currentSession = [];
   List<Map<String, String>> list = [];
+  int isListGetted = 0;
 
   void openSession() {
     currentSession.clear();
@@ -26,18 +27,25 @@ class AIHandler {
   }
 
   final _openAI = OpenAI.instance.build(
-    token: '',
+    token: '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',
     baseOption: HttpSetup(
       receiveTimeout: const Duration(seconds: 60),
       connectTimeout: const Duration(seconds: 60),
     ),
   );
 
-  Future<String> getResponse(String message, int sessionId) async {
+  Future<String> getResponse(
+      List<Map<String, String>>? newList, String message, int sessionId) async {
+    if (newList != null && isListGetted == 0) {
+      isListGetted += 1;
+
+      list.addAll(newList);
+    }
     try {
       print(list.length);
 
       list.add({"role": "user", "content": message});
+      print(list.length);
 
       //Map.of({"role": "user", "content": message})
       final request = ChatCompleteText(

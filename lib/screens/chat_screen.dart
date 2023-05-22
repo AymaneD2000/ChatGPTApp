@@ -22,6 +22,8 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final AIHandler aiHandler = AIHandler();
   final List<ChatModel> list = [];
+  int giveList = 0;
+  List<Map<String, String>> lastChat = [];
 
   @override
   void dispose() {
@@ -57,11 +59,31 @@ class _ChatScreenState extends State<ChatScreen> {
           Expanded(
             child: Consumer(builder: (context, ref, child) {
               final chats = ref.watch(chatsProvider).reversed.toList();
+              List<ChatModel> thisListe = [];
+              thisListe.addAll(list.reversed);
               if (list != null && list != []) {
-                // list.forEach((element) {
-                //   if (element.isMe == true)
-                //     aiHandler.getResponse(element.message, widget.sessionId);
-                // });
+                if (giveList == 0) {
+                  giveList += 1;
+                  List<Map<String, String>> myList = [];
+                  for (int i = 0; i < thisListe.length; i++) {
+                    print(thisListe[i].isMe);
+                    if (thisListe[i].isMe) {
+                      myList.add(
+                          {"role": "user", "content": thisListe[i].message});
+                      print(thisListe[i].message);
+                    } else {
+                      myList.add({
+                        "role": "assistant",
+                        "content": thisListe[i].message
+                      });
+                    }
+                  }
+                  lastChat.addAll(myList);
+
+                  print("Last chat a pour taille ${lastChat.length}");
+                  //aiHandler.getResponse(myList, "message", widget.sessionId);
+                }
+
                 chats.addAll(list.reversed);
               }
               return ListView.builder(
@@ -76,7 +98,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           Padding(
             padding: EdgeInsets.all(12.0),
-            child: TextAndVoiceField(id: widget.sessionId),
+            child: TextAndVoiceField(lastChat, id: widget.sessionId),
           ),
           const SizedBox(height: 10),
         ],
