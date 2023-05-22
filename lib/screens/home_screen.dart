@@ -9,7 +9,12 @@ import '../models/Session.dart';
 import '../providers/Database_Manager.dart';
 import '../providers/active_theme_provider.dart';
 import '../services/ai_handler.dart';
+//import '../widgets/Expande_tile_topic.dart';
+//import '../widgets/Profile_container.dart';
+import '../widgets/Topics_Suggestion_List.dart';
+//import '../widgets/Topics_liste.dart';
 import '../widgets/drawer_widget.dart';
+import '../widgets/expand_tile_topic.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'home';
@@ -18,36 +23,9 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class Discussions {
-  String topic;
-  List<String> suggestions;
-  Discussions({required this.topic, required this.suggestions});
-}
-
 class _HomeScreenState extends State<HomeScreen> {
   final AIHandler aiHandler = AIHandler();
   final DatabaseManager _databaseManager = DatabaseManager.instance;
-
-  List<Discussions> topics = [
-    Discussions(
-      topic: 'Education',
-      suggestions: [
-        'Science chat',
-        'English teacher',
-        'Mathematics help',
-      ],
-    ),
-    Discussions(
-      topic: 'Technology',
-      suggestions: [
-        'Programming discussion',
-        'Gadgets and devices',
-        'AI and Machine Learning',
-      ],
-    ),
-    // Add more topics and suggestions as needed
-  ];
-  List<String> currentSuggestions = [];
 
   void _openSession() async {
     int id = await _databaseManager.saveGlobalSession('sessionName');
@@ -62,23 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void updateSuggestions(String topic) {
-    Discussions? selectedDiscussion = topics.firstWhere(
-      (discussion) => discussion.topic == topic,
-      orElse: () => Discussions(topic: '', suggestions: []),
-    );
-
-    if (selectedDiscussion != null) {
-      setState(() {
-        currentSuggestions = selectedDiscussion.suggestions;
-      });
-    } else {
-      setState(() {
-        currentSuggestions = [];
-      });
-    }
-  }
-
   @override
   void dispose() {
     aiHandler.dispose();
@@ -90,55 +51,78 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       drawer: DrawerWidget(),
       appBar: HomeAppBar(),
-      body: Column(
-        children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.2,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: topics.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    updateSuggestions(topics[index].topic);
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.2,
-                    margin: EdgeInsets.all(8),
-                    color: Colors.blue, // Customize as needed
-                    child: Center(
-                      child: Text(
-                        topics[index].topic,
-                        style: TextStyle(
-                          color: Colors.white, // Customize as needed
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+      body: Consumer(builder: (context, ref, child) {
+        final theme = ref.watch(activeThemeProvider);
+        return Center(
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.9,
+            height: MediaQuery.of(context).size.height * 0.7,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 5,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    "I suggest you some topics you can ask me",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: theme == Themes.dark ? Colors.black : Colors.black,
                     ),
                   ),
-                );
-              },
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: topics.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        margin: EdgeInsets.symmetric(vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 3,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: DiscussionsExpansionTile(
+                          discussions: topics[index],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: currentSuggestions.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(currentSuggestions[index]),
-                  onTap: () {
-                    // Handle suggestion selection
-                  },
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _openSession,
-        child: Icon(Icons.add),
+        );
+      }),
+      floatingActionButton: Consumer(
+        builder: (context, ref, child) {
+          final theme = ref.watch(activeThemeProvider);
+
+          return FloatingActionButton(
+            onPressed: _openSession,
+            backgroundColor: theme == Themes.dark ? Colors.white : Colors.black,
+            foregroundColor: theme == Themes.dark ? Colors.black : Colors.white,
+            child: Icon(Icons.message),
+          );
+        },
       ),
     );
   }

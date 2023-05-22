@@ -10,10 +10,12 @@ import '../widgets/my_app_bar.dart';
 import '../widgets/text_and_voice_field.dart';
 
 class ChatScreen extends StatefulWidget {
-  ChatScreen({Key? key, required this.sessionId, this.list});
+  ChatScreen(
+      {Key? key, this.messageTopics, required this.sessionId, this.list});
   static const String id = 'chat';
   final List<Discussion>? list;
   final int sessionId;
+  final String? messageTopics;
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -98,7 +100,11 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           Padding(
             padding: EdgeInsets.all(12.0),
-            child: TextAndVoiceField(lastChat, id: widget.sessionId),
+            child: TextAndVoiceField(
+              lastChat,
+              id: widget.sessionId,
+              message: widget.messageTopics,
+            ),
           ),
           const SizedBox(height: 10),
         ],

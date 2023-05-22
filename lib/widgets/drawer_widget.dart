@@ -27,10 +27,10 @@ class DrawerWidget extends StatelessWidget {
             margin: EdgeInsets.zero,
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
             child: const Text(
-              "Conversation session history",
+              "Your history",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 25,
+                fontSize: 20,
               ),
               textAlign: TextAlign.center,
             ),
@@ -61,21 +61,39 @@ class DrawerWidget extends StatelessWidget {
                           ? discussions.first.aiReply
                           : '';
                       return Card(
-                        child: ListTile(
-                          isThreeLine: true,
-                          title: Text(messageUser),
-                          subtitle: Text(messageIA),
-                          onTap: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ChatScreen(
-                                      list: discussions,
-                                      sessionId: session.id)),
-                            );
-                          },
+                          child: ListTile(
+                        isThreeLine: true,
+                        title: Text(
+                          messageUser.length > 20
+                              ? messageUser.substring(0, 20) +
+                                  '...' // Add ellipsis if text is too long
+                              : messageUser,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
                         ),
-                      );
+                        subtitle: Text(
+                          messageIA.length > 50
+                              ? messageIA.substring(0, 50) +
+                                  '...' // Add ellipsis if text is too long
+                              : messageIA,
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChatScreen(
+                                list: discussions,
+                                sessionId: session.id,
+                              ),
+                            ),
+                          );
+                        },
+                      ));
                     },
                   );
                 } else {
