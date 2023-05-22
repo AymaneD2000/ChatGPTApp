@@ -23,6 +23,9 @@ class DrawerWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          const SizedBox(
+            height: 20,
+          ),
           Container(
             margin: EdgeInsets.zero,
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
@@ -125,6 +128,7 @@ class DrawerWidget extends StatelessWidget {
                               builder: (context, ref, child) => IconButton(
                                   onPressed: () {},
                                   icon: Icon(
+                                    size: 35,
                                     Icons.settings,
                                     color: ref.watch(activeThemeProvider) ==
                                             Themes.dark
@@ -135,6 +139,8 @@ class DrawerWidget extends StatelessWidget {
                               builder: (context, ref, child) => Text(
                                     "Settings",
                                     style: TextStyle(
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.bold,
                                         color: ref.watch(activeThemeProvider) ==
                                                 Themes.dark
                                             ? Colors.white
