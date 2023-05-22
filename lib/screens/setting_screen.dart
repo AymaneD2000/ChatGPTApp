@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:gpt_flutter/screens/privacy_polici_page.dart';
+import 'package:gpt_flutter/screens/term_of_service_page.dart';
 
 class Setting extends StatefulWidget {
   const Setting({super.key});
@@ -30,7 +32,6 @@ class _SettingState extends State<Setting> {
     {
       "Like us,Rate us ?": const Icon(
         FlutterIcons.star_ant,
-        color: Colors.white,
       )
     },
     {
@@ -103,6 +104,7 @@ class _SettingState extends State<Setting> {
                 ),
               ),
             ),
+            //Twittwer etc...
             Container(
               padding: EdgeInsets.fromLTRB(9, 0, 9, 0),
               child: Card(
@@ -130,8 +132,8 @@ class _SettingState extends State<Setting> {
                                 child: Text(
                                   lister[i].keys.first,
                                   style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               )
                             ],
@@ -141,6 +143,7 @@ class _SettingState extends State<Setting> {
                     }),
               ),
             ),
+            //mail et purchase
             Container(
               padding: EdgeInsets.fromLTRB(9, 15, 9, 0),
               child: Card(
@@ -167,8 +170,8 @@ class _SettingState extends State<Setting> {
                                 child: Text(
                                   lister1[i].keys.first,
                                   style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               )
                             ],
@@ -190,25 +193,39 @@ class _SettingState extends State<Setting> {
                     shrinkWrap: true,
                     itemCount: lister2.length,
                     itemBuilder: (BuildContext context, i) {
-                      return Container(
-                        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                        child: Card(
-                          child: Row(
-                            children: [
-                              IconButton(
-                                onPressed: () {},
-                                icon: lister2[i].values.first,
-                              ),
-                              Container(
-                                padding: EdgeInsets.only(left: 20),
-                                child: Text(
-                                  lister2[i].keys.first,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (BuildContext context) {
+                            if (i == 0) {
+                              return PrivacyPolicy();
+                            } else if (i == 1) {
+                              return TermsOfService();
+                            } else {
+                              return Container();
+                            }
+                          }));
+                        },
+                        child: Container(
+                          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          child: Card(
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: lister2[i].values.first,
                                 ),
-                              )
-                            ],
+                                Container(
+                                  padding: EdgeInsets.only(left: 20),
+                                  child: Text(
+                                    lister2[i].keys.first,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       );

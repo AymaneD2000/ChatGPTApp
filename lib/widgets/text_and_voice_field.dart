@@ -13,8 +13,9 @@ enum InputMode {
 
 class TextAndVoiceField extends ConsumerStatefulWidget {
   final int id;
-
-  const TextAndVoiceField({Key? key, required this.id}) : super(key: key);
+  final List<Map<String, String>>? lastChat;
+  const TextAndVoiceField(this.lastChat, {Key? key, required this.id})
+      : super(key: key);
 
   @override
   ConsumerState<TextAndVoiceField> createState() => _TextAndVoiceFieldState();
@@ -118,7 +119,8 @@ class _TextAndVoiceFieldState extends ConsumerState<TextAndVoiceField> {
     addToChatList(message, true, DateTime.now().toString());
     addToChatList('Typing...', false, 'typing');
     setInputMode(InputMode.voice);
-    final aiResponse = await _openAI.getResponse(message, sessionId);
+    final aiResponse =
+        await _openAI.getResponse(widget.lastChat, message, sessionId);
     removeTyping();
     addToChatList(aiResponse, false, DateTime.now().toString());
     setReplyingState(false);

@@ -21,17 +21,30 @@ class DrawerWidget extends StatelessWidget {
     globalSessionsFuture = _databaseManager.getAllGlobalSessions();
     return Drawer(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          Container(
+            margin: EdgeInsets.zero,
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+            child: const Text(
+              "Conversation session history",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
           Expanded(
             child: FutureBuilder<List<Session>>(
               future: globalSessionsFuture,
               builder: (context, globalSnapshot) {
                 if (globalSnapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 } else if (globalSnapshot.hasError) {
-                  return Center(
+                  return const Center(
                     child: Text('An error occurred.'),
                   );
                 } else if (globalSnapshot.hasData) {
@@ -49,14 +62,9 @@ class DrawerWidget extends StatelessWidget {
                           : '';
                       return Card(
                         child: ListTile(
-                          title: Text(session.name),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('User: $messageUser'),
-                              Text('AI Reply: $messageIA'),
-                            ],
-                          ),
+                          isThreeLine: true,
+                          title: Text(messageUser),
+                          subtitle: Text(messageIA),
                           onTap: () {
                             Navigator.pushReplacement(
                               context,
