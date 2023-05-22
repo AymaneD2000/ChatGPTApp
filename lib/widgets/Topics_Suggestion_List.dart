@@ -281,7 +281,7 @@ List<Discussions> topics = [
   ),
 
   Discussions(
-    topic: 'Travel:',
+    topic: 'Travel',
     suggestions: [
       Suggestion(
         suggestions: 'Virtual city tours',

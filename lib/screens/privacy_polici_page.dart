@@ -38,7 +38,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("data"),
+        title: Text("Privacy Policy"),
       ),
       body: Center(
         child: WebViewWidget(controller: _controller),

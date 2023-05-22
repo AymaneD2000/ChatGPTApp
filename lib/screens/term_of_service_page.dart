@@ -32,7 +32,7 @@ class TermsOfService extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("data"),
+        title: Text("Term of services"),
       ),
       body: Center(
         child: WebViewWidget(controller: _controller),
