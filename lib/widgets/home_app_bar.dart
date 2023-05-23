@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:gpt_flutter/screens/home_screen.dart';
+
 import '../providers/active_theme_provider.dart';
 import 'theme_switch.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/ai_handler.dart';
+
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
-  HomeAppBar({super.key});
+  const HomeAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {

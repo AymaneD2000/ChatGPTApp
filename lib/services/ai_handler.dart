@@ -1,7 +1,8 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
-import 'package:gpt_flutter/models/Discussion.dart';
 
 import '../providers/Database_Manager.dart';
 
@@ -27,7 +28,7 @@ class AIHandler {
   }
 
   final _openAI = OpenAI.instance.build(
-    token: '',
+    token: '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',
     baseOption: HttpSetup(
       receiveTimeout: const Duration(seconds: 60),
       connectTimeout: const Duration(seconds: 60),
@@ -52,7 +53,7 @@ class AIHandler {
           messages: list, maxToken: 800, model: ChatModel.gptTurbo0301);
       //final rep = request.messages[0].values;
       final response = await _openAI.onChatCompletion(request: request);
-      int k = 0;
+
       print(response);
       if (response != null) {
         String reply = response.choices[0].message!.content.trim();
@@ -67,7 +68,7 @@ class AIHandler {
         //mise a jour de la liste dans la base de donnees
         await _databaseManager.deleteSessionListe(sessionId);
         await _databaseManager.saveSessionListe(listToJson, sessionId);
-        var lister = await _databaseManager.getAllSessionsListe(sessionId);
+        //var lister = await _databaseManager.getAllSessionsListe(sessionId);
         list.add({"role": "assistant", "content": reply});
         print("longueur de la liste avant get ${list.length}");
         await _databaseManager.saveSession(session, sessionId);
