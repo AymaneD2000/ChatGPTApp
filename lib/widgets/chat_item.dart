@@ -31,7 +31,7 @@ class _ChatItemState extends State<ChatItem> {
     await text_to_speech.setLanguage('en-US');
     await text_to_speech.setPitch(1.0);
     await text_to_speech.speak(texte);
-    //await text_to_speech.awaitSpeakCompletion(isSpeacking);
+    await text_to_speech.awaitSpeakCompletion(isSpeacking);
   }
 
   Future stop() async {
