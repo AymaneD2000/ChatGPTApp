@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ChatItem extends StatelessWidget {
   final String text;
@@ -39,10 +40,17 @@ class ChatItem extends StatelessWidget {
                 bottomRight: Radius.circular(isMe ? 0 : 15),
               ),
             ),
-            child: Text(
-              text,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSecondary,
+            child: GestureDetector(
+              onTap: () {
+                Clipboard.setData(ClipboardData(text: text));
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Text copied to clipboard")));
+              },
+              child: Text(
+                text,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSecondary,
+                ),
               ),
             ),
           ),
