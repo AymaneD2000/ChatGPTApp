@@ -30,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _openSession() async {
     int id = await _databaseManager.saveGlobalSession('sessionName');
     Session session = Session(id: id, name: 'sessionName');
+    // ignore: use_build_context_synchronously
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
