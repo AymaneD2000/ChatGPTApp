@@ -56,6 +56,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar(sessionId: widget.sessionId),
+      
       body: Column(
         children: [
           Expanded(

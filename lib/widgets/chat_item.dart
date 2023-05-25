@@ -31,8 +31,6 @@ class _ChatItemState extends State<ChatItem> {
     await text_to_speech.setLanguage('en-US');
     await text_to_speech.setPitch(1.0);
     await text_to_speech.speak(texte);
-    await text_to_speech.awaitSpeakCompletion(isSpeacking);
-
   }
 
   Future stop() async {
@@ -98,8 +96,10 @@ class _ChatItemState extends State<ChatItem> {
               //Boutton pour lire du texte et arreter la lecture
               IconButton(
                   onPressed: () async {
+                    await stop();
                     setState(() {
                       isSpeacking = !isSpeacking;
+                      print(isSpeacking);
                     });
                     if (isSpeacking) {
                       _speack(widget.text).then((value) {
@@ -113,9 +113,9 @@ class _ChatItemState extends State<ChatItem> {
                         isSpeacking = false;
                       });
                     }
+                    print(isSpeacking);
                   },
-                  icon:
-                      Icon((isSpeacking) ? Icons.volume_up : Icons.volume_off)),
+                  icon: const Icon(Icons.volume_up)),
 
               //Boutton pour copier du texte
               IconButton(

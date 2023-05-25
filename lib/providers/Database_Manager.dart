@@ -11,6 +11,9 @@ class DatabaseManager {
   static final DatabaseManager instance = DatabaseManager._();
   static Database? _database;
 
+  List<Session> _session = [];
+  List<Session> get session => _session;
+
   DatabaseManager._();
 
   Future<Database> get database async {
@@ -209,13 +212,14 @@ class DatabaseManager {
 
   Future<List<Session>> getAllGlobalSessions() async {
     final db = await database;
-    final list = await db.query('Globalsessions');
+    final list = await db.query(global);
     final sessionList = <Session>[];
     for (final session in list) {
       final temp = Session.fromMap(session);
       temp.discussions = await getSessionForGlobal(temp.id);
       sessionList.add(temp);
     }
-    return sessionList;
+    _session = sessionList;
+    return _session;
   }
 }
