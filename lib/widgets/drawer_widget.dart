@@ -8,12 +8,20 @@ import '../screens/chat_screen.dart';
 import '../screens/setting_screen.dart';
 import '../services/ai_handler.dart';
 
-class DrawerWidget extends StatelessWidget {
+class DrawerWidget extends StatefulWidget {
   DrawerWidget({
     super.key,
   });
+
+  @override
+  State<DrawerWidget> createState() => _DrawerWidgetState();
+}
+
+class _DrawerWidgetState extends State<DrawerWidget> {
   final AIHandler aiHandler = AIHandler();
+
   final DatabaseManager _databaseManager = DatabaseManager.instance;
+
   late Future<List<Session>> globalSessionsFuture;
 
   @override
@@ -65,23 +73,26 @@ class DrawerWidget extends StatelessWidget {
                           : '';
                       return Card(
                           child: ListTile(
+                        trailing: IconButton(
+                            onPressed: () {
+                              deleteDialog(session.id);
+                            },
+                            icon: const Icon(Icons.delete)),
                         isThreeLine: true,
                         title: Text(
                           messageUser.length > 20
-                              ? messageUser.substring(0, 20) +
-                                  '...' // Add ellipsis if text is too long
+                              ? '${messageUser.substring(0, 20)}...' // Add ellipsis if text is too long
                               : messageUser,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
                         ),
                         subtitle: Text(
                           messageIA.length > 50
-                              ? messageIA.substring(0, 50) +
-                                  '...' // Add ellipsis if text is too long
+                              ? '${messageIA.substring(0, 50)}...' // Add ellipsis if text is too long
                               : messageIA,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 14,
                           ),
                         ),
@@ -158,5 +169,52 @@ class DrawerWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> delete(int sid) async {
+    print("deleting ...");
+    await _databaseManager.deleteGlobalSession(sid);
+    print("Supprimmer");
+  }
+
+  Future<void> deleteDialog(int todelete) async {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Be Carful !"),
+            content:
+                const Text("Are you sure to delete this Session from history"),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                      onPressed: () {
+                        delete(todelete).then((value) async {
+                          var result = _databaseManager.getAllGlobalSessions();
+                          setState(() {
+                            globalSessionsFuture = result;
+                          });
+                        });
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        "Delete",
+                        style: TextStyle(color: Colors.red),
+                      )),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        "Cancel",
+                        style: TextStyle(color: Colors.blue),
+                      ))
+                ],
+              )
+            ],
+          );
+        });
   }
 }
