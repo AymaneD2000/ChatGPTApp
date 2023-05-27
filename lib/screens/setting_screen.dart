@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:gpt_flutter/screens/privacy_polici_page.dart';
+import 'package:gpt_flutter/screens/rate_screen.dart';
 import 'package:gpt_flutter/screens/term_of_service_page.dart';
 
 class Setting extends StatefulWidget {
@@ -14,7 +15,7 @@ class Setting extends StatefulWidget {
 
 class _SettingState extends State<Setting> {
   Map<String, Icon> list = {
-    "Follow on Twitter": Icon(FlutterIcons.twitter_ant)
+    "Follow on Twitter": const Icon(FlutterIcons.twitter_ant)
   };
   List<Map<String, Icon>> lister = [
     {
@@ -24,7 +25,7 @@ class _SettingState extends State<Setting> {
       )
     },
     {
-      "Follow on Twitter": Icon(
+      "Follow on Twitter": const Icon(
         FlutterIcons.reddit_alien_faw,
         color: Colors.red,
       )
@@ -83,20 +84,20 @@ class _SettingState extends State<Setting> {
           children: [
             Container(
               height: 95,
-              padding: EdgeInsets.fromLTRB(10, 10, 10, 15),
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 15),
               decoration:
                   BoxDecoration(borderRadius: BorderRadius.circular(30)),
               child: Card(
                 shape: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15),
-                    borderSide: BorderSide(color: Colors.transparent)),
+                    borderSide: const BorderSide(color: Colors.transparent)),
                 child: Row(
                   children: [
                     IconButton(onPressed: () {}, icon: const Icon(Icons.share)),
                     Container(
-                      padding: EdgeInsets.only(left: 20),
+                      padding: const EdgeInsets.only(left: 20),
                       child: const Text(
-                        "Share Ask AI",
+                        "Share Zetron AI",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     )
@@ -106,11 +107,11 @@ class _SettingState extends State<Setting> {
             ),
             //Twittwer etc...
             Container(
-              padding: EdgeInsets.fromLTRB(9, 0, 9, 0),
+              padding: const EdgeInsets.fromLTRB(9, 0, 9, 0),
               child: Card(
                 shape: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide(color: Colors.transparent)),
+                    borderSide: const BorderSide(color: Colors.transparent)),
                 child: ListView.builder(
                     physics: const BouncingScrollPhysics(
                         parent: NeverScrollableScrollPhysics()),
@@ -118,21 +119,44 @@ class _SettingState extends State<Setting> {
                     itemCount: lister.length,
                     itemBuilder: (BuildContext context, i) {
                       return Container(
-                        margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                         child: Card(
                           child: Row(
                             children: [
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  if (lister[i].keys.first ==
+                                      "Like us,Rate us ?") {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return RateUsDialog();
+                                      },
+                                    );
+                                  }
+                                },
                                 icon: lister[i].values.first,
                                 color: Colors.blue,
                               ),
-                              Container(
-                                padding: EdgeInsets.only(left: 20),
-                                child: Text(
-                                  lister[i].keys.first,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
+                              GestureDetector(
+                                onTap: () {
+                                  if (lister[i].keys.first ==
+                                      "Like us,Rate us ?") {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return RateUsDialog();
+                                      },
+                                    );
+                                  }
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.only(left: 20),
+                                  child: Text(
+                                    lister[i].keys.first,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               )
@@ -145,11 +169,11 @@ class _SettingState extends State<Setting> {
             ),
             //mail et purchase
             Container(
-              padding: EdgeInsets.fromLTRB(9, 15, 9, 0),
+              padding: const EdgeInsets.fromLTRB(9, 15, 9, 0),
               child: Card(
                 shape: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide(color: Colors.transparent)),
+                    borderSide: const BorderSide(color: Colors.transparent)),
                 child: ListView.builder(
                     physics: const BouncingScrollPhysics(
                         parent: NeverScrollableScrollPhysics()),
@@ -157,7 +181,7 @@ class _SettingState extends State<Setting> {
                     itemCount: lister1.length,
                     itemBuilder: (BuildContext context, i) {
                       return Container(
-                        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                         child: Card(
                           child: Row(
                             children: [
@@ -166,7 +190,7 @@ class _SettingState extends State<Setting> {
                                 icon: lister1[i].values.first,
                               ),
                               Container(
-                                padding: EdgeInsets.only(left: 20),
+                                padding: const EdgeInsets.only(left: 20),
                                 child: Text(
                                   lister1[i].keys.first,
                                   style: const TextStyle(
@@ -182,11 +206,11 @@ class _SettingState extends State<Setting> {
               ),
             ),
             Container(
-              margin: EdgeInsets.fromLTRB(9, 15, 9, 0),
+              margin: const EdgeInsets.fromLTRB(9, 15, 9, 0),
               child: Card(
                 shape: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide(color: Colors.transparent)),
+                    borderSide: const BorderSide(color: Colors.transparent)),
                 child: ListView.builder(
                     physics: const BouncingScrollPhysics(
                         parent: NeverScrollableScrollPhysics()),
@@ -207,7 +231,7 @@ class _SettingState extends State<Setting> {
                           }));
                         },
                         child: Container(
-                          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                           child: Card(
                             child: Row(
                               children: [
@@ -216,7 +240,7 @@ class _SettingState extends State<Setting> {
                                   icon: lister2[i].values.first,
                                 ),
                                 Container(
-                                  padding: EdgeInsets.only(left: 20),
+                                  padding: const EdgeInsets.only(left: 20),
                                   child: Text(
                                     lister2[i].keys.first,
                                     style: const TextStyle(

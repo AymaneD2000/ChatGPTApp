@@ -28,7 +28,7 @@ class AIHandler {
   }
 
   final _openAI = OpenAI.instance.build(
-    token: '',
+    token: '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',
     baseOption: HttpSetup(
       receiveTimeout: const Duration(seconds: 60),
       connectTimeout: const Duration(seconds: 60),
