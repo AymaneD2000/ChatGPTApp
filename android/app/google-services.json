@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "171166277974",
+    "project_id": "zetron-ai",
+    "storage_bucket": "zetron-ai.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:171166277974:android:1c1308cdba1a39a587f6f7",
+        "android_client_info": {
+          "package_name": "com.example.gpt_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQ-4x9WYeXBTCW_ZoXDYKy7nNU9h7Te4Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
