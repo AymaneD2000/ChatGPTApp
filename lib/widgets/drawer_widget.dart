@@ -172,9 +172,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
   }
 
   Future<void> delete(int sid) async {
-    print("deleting ...");
     await _databaseManager.deleteGlobalSession(sid);
-    print("Supprimmer");
   }
 
   Future<void> deleteDialog(int todelete) async {

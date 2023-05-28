@@ -25,6 +25,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: Colors.black,
       automaticallyImplyLeading: false,
       title: Row(
         children: [
@@ -39,9 +40,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               onTap: () async {
                 final chats = ref.read(chatsProvider.notifier);
                 chats.clean();
-                print("getting");
-                //await aiHandler.getResponse("getList", sessionId);
-                print("got it");
+
                 final result = await db.getSessionForGlobal(sessionId);
                 final number = result.length;
 
