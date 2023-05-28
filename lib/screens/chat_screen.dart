@@ -55,21 +55,21 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: MyAppBar(sessionId: widget.sessionId),
-      
       body: Column(
         children: [
           Expanded(
             child: Consumer(builder: (context, ref, child) {
               final chats = ref.watch(chatsProvider).reversed.toList();
               List<ChatModel> thisListe = [];
-              thisListe.addAll(list.reversed);
+              thisListe.addAll(list);
+              //print(list.first.message);
               if (list != null && list != []) {
                 if (giveList == 0) {
                   giveList += 1;
                   List<Map<String, String>> myList = [];
                   for (int i = 0; i < thisListe.length; i++) {
-                    print(thisListe[i].isMe);
                     if (thisListe[i].isMe) {
                       myList.add(
                           {"role": "user", "content": thisListe[i].message});

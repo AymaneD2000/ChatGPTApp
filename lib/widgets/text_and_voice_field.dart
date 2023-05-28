@@ -151,6 +151,7 @@ class _TextAndVoiceFieldState extends ConsumerState<TextAndVoiceField> {
 
   void addToChatList(String message, bool isMe, String id) {
     final chats = ref.read(chatsProvider.notifier);
+
     chats.add(ChatModel(
       id: id,
       message: message,

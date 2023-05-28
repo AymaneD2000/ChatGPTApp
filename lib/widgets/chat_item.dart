@@ -40,34 +40,21 @@ class _ChatItemState extends State<ChatItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(
-        vertical: 10,
-        horizontal: 12,
-      ),
+      //Color.fromARGB(255, 27, 27, 27),
+      decoration: BoxDecoration(
+          color: widget.isMe ? Color.fromARGB(255, 40, 54, 40) : Colors.black),
       child: Column(
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment:
-                widget.isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              if (!widget.isMe) ProfileContainer(isMe: widget.isMe),
-              if (!widget.isMe) const SizedBox(width: 15),
+              ProfileContainer(isMe: widget.isMe),
+              //const SizedBox(width: 15),
               Container(
                 padding: const EdgeInsets.all(15),
                 constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.60,
-                ),
-                decoration: BoxDecoration(
-                  color: widget.isMe
-                      ? Theme.of(context).colorScheme.secondary
-                      : Colors.grey.shade800,
-                  borderRadius: BorderRadius.only(
-                    topLeft: const Radius.circular(15),
-                    topRight: const Radius.circular(15),
-                    bottomLeft: Radius.circular(widget.isMe ? 15 : 0),
-                    bottomRight: Radius.circular(widget.isMe ? 0 : 15),
-                  ),
+                  maxWidth: MediaQuery.of(context).size.width * 0.85,
                 ),
                 child: GestureDetector(
                   onTap: () {
@@ -79,62 +66,62 @@ class _ChatItemState extends State<ChatItem> {
                   child: Text(
                     widget.text,
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSecondary,
-                    ),
+                        color: Theme.of(context).colorScheme.onSecondary,
+                        fontSize: 18),
                   ),
                 ),
               ),
-              if (widget.isMe) const SizedBox(width: 15),
-              if (widget.isMe) ProfileContainer(isMe: widget.isMe),
+              // if (widget.isMe) const SizedBox(width: 15),
+              // if (widget.isMe) ProfileContainer(isMe: widget.isMe),
             ],
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment:
-                widget.isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
-            children: [
-              //Boutton pour lire du texte et arreter la lecture
-              IconButton(
-                  onPressed: () async {
-                    await stop();
-                    setState(() {
-                      isSpeacking = !isSpeacking;
-                      print(isSpeacking);
-                    });
-                    if (isSpeacking) {
-                      _speack(widget.text).then((value) {
-                        setState(() {
-                          isSpeacking = false;
-                        });
-                      });
-                    } else {
-                      await stop();
-                      setState(() {
-                        isSpeacking = false;
-                      });
-                    }
-                    print(isSpeacking);
-                  },
-                  icon: const Icon(Icons.volume_up)),
+          // Row(
+          //   crossAxisAlignment: CrossAxisAlignment.end,
+          //   mainAxisAlignment:
+          //       widget.isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+          //   children: [
+          //     //Boutton pour lire du texte et arreter la lecture
+          //     IconButton(
+          //         onPressed: () async {
+          //           await stop();
+          //           setState(() {
+          //             isSpeacking = !isSpeacking;
+          //             print(isSpeacking);
+          //           });
+          //           if (isSpeacking) {
+          //             _speack(widget.text).then((value) {
+          //               setState(() {
+          //                 isSpeacking = false;
+          //               });
+          //             });
+          //           } else {
+          //             await stop();
+          //             setState(() {
+          //               isSpeacking = false;
+          //             });
+          //           }
+          //           print(isSpeacking);
+          //         },
+          //         icon: const Icon(Icons.volume_up)),
 
-              //Boutton pour copier du texte
-              IconButton(
-                  onPressed: () {
-                    Clipboard.setData(ClipboardData(text: widget.text));
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        duration: Duration(seconds: 1),
-                        content: Text("Text copied to clipboard")));
-                  },
-                  icon: const Icon(Icons.copy)),
-              //boutton pour envoye du texte
-              IconButton(
-                  onPressed: () {
-                    print(widget.text);
-                    Share.share(widget.text);
-                  },
-                  icon: const Icon(Icons.share)),
-            ],
-          )
+          //     //Boutton pour copier du texte
+          //     IconButton(
+          //         onPressed: () {
+          //           Clipboard.setData(ClipboardData(text: widget.text));
+          //           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          //               duration: Duration(seconds: 1),
+          //               content: Text("Text copied to clipboard")));
+          //         },
+          //         icon: const Icon(Icons.copy)),
+          //     //boutton pour envoye du texte
+          //     IconButton(
+          //         onPressed: () {
+          //           print(widget.text);
+          //           Share.share(widget.text);
+          //         },
+          //         icon: const Icon(Icons.share)),
+          //   ],
+          // )
         ],
       ),
     );
@@ -152,20 +139,21 @@ class ProfileContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.only(top: 15),
       alignment: Alignment.center,
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color: isMe
-            ? Theme.of(context).colorScheme.secondary
-            : Colors.grey.shade800,
-        borderRadius: BorderRadius.only(
-          topLeft: const Radius.circular(10),
-          topRight: const Radius.circular(10),
-          bottomLeft: Radius.circular(isMe ? 0 : 15),
-          bottomRight: Radius.circular(isMe ? 15 : 0),
-        ),
-      ),
+          // color: isMe
+          //     ? Theme.of(context).colorScheme.secondary
+          //     : Colors.grey.shade800,
+          // borderRadius: BorderRadius.only(
+          //   topLeft: const Radius.circular(10),
+          //   topRight: const Radius.circular(10),
+          //   bottomLeft: Radius.circular(isMe ? 0 : 15),
+          //   bottomRight: Radius.circular(isMe ? 15 : 0),
+          // ),
+          ),
       child: Icon(
         isMe ? Icons.person : Icons.computer,
         color: Theme.of(context).colorScheme.onSecondary,
