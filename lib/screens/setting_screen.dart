@@ -5,6 +5,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:gpt_flutter/screens/privacy_polici_page.dart';
 import 'package:gpt_flutter/screens/rate_screen.dart';
 import 'package:gpt_flutter/screens/term_of_service_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Setting extends StatefulWidget {
   const Setting({super.key});
@@ -142,12 +143,13 @@ class _SettingState extends State<Setting> {
                                 onTap: () {
                                   if (lister[i].keys.first ==
                                       "Like us,Rate us ?") {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return RateUsDialog();
-                                      },
-                                    );
+                                    // showDialog(
+                                    //   context: context,
+                                    //   builder: (BuildContext context) {
+                                    //     return RateUsDialog();
+                                    //   },
+                                    // );
+                                    launchPlayStoreForRating();
                                   }
                                 },
                                 child: Container(
@@ -260,5 +262,45 @@ class _SettingState extends State<Setting> {
         ),
       ),
     );
+  }
+}
+
+void showRateAppDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text("Noter l'application"),
+        content: const Text("Aimez-vous utiliser cette application ?"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text("Non"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              launchPlayStoreForRating();
+            },
+            child: const Text("Oui"),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void launchPlayStoreForRating() async {
+  final Uri _url = Uri.parse("com.android.chrome");
+  String appPackageName = "com.android.chrome";
+  final Uri surl = Uri.parse(
+      'https://play.google.com/store/apps/details?id=$appPackageName');
+  final String url = 'market://details?id=$appPackageName';
+  if (await canLaunchUrl(_url)) {
+    await launchUrl(_url);
+  } else {
+    await launchUrl(surl);
   }
 }

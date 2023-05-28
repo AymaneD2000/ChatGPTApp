@@ -1,8 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
+
 import '../models/discussions.dart';
 import '../models/suggestion.dart';
 
 List<Discussions> topics = [
   Discussions(
+    icon: Icons.school,
     topic: 'Education',
     suggestions: [
       Suggestion(
@@ -58,6 +62,7 @@ List<Discussions> topics = [
     ],
   ),
   Discussions(
+    icon: Icons.science,
     topic: 'Technology',
     suggestions: [
       Suggestion(
@@ -113,6 +118,7 @@ List<Discussions> topics = [
     ],
   ),
   Discussions(
+    icon: Icons.health_and_safety,
     topic: 'Health and Fitness',
     suggestions: [
       Suggestion(
@@ -169,6 +175,7 @@ List<Discussions> topics = [
   ),
 
   Discussions(
+    icon: Icons.man,
     topic: 'Fun',
     suggestions: [
       Suggestion(
@@ -225,6 +232,7 @@ List<Discussions> topics = [
   ),
 
   Discussions(
+    icon: Icons.work,
     topic: 'Daily Lifestyle',
     suggestions: [
       Suggestion(
@@ -281,6 +289,7 @@ List<Discussions> topics = [
   ),
 
   Discussions(
+    icon: Icons.travel_explore,
     topic: 'Travel',
     suggestions: [
       Suggestion(

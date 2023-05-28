@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gpt_flutter/screens/setting_screen.dart';
 
 import '../providers/active_theme_provider.dart';
 import 'theme_switch.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
@@ -11,26 +11,32 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      title: const Text(
         'Zetron - AI',
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 25,
-          color: Theme.of(context).colorScheme.onPrimary,
+          fontSize: 30,
+          color: Colors.white,
         ),
       ),
       actions: [
         Row(
           children: [
-            Consumer(
-              builder: (context, ref, child) => Icon(
-                ref.watch(activeThemeProvider) == Themes.dark
-                    ? Icons.dark_mode
-                    : Icons.light_mode,
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const Setting()));
+              },
+              child: const Icon(
+                Icons.settings,
+                size: 30,
               ),
             ),
-            const SizedBox(width: 8),
-            const ThemeSwitch(),
+            const SizedBox(
+              width: 10,
+            )
           ],
         )
       ],
