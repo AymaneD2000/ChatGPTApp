@@ -33,7 +33,7 @@ class _LaunchScreenState extends State<LaunchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: GestureDetector(
           onTap: () {
