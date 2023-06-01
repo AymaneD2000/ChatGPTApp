@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/Session.dart';
 import '../models/chat_model.dart';
+import '../providers/Database_Manager.dart';
 import '../providers/chats_provider.dart';
 import '../services/ai_handler.dart';
 import '../services/voice_handler.dart';
@@ -54,6 +56,7 @@ class _TextAndVoiceFieldState extends ConsumerState<TextAndVoiceField> {
         children: [
           Flexible(
             child: TextField(
+              onTap: () async {},
               showCursor: true,
               expands: true,
               maxLines: null,

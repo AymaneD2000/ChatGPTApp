@@ -28,15 +28,15 @@ class AIHandler {
   }
 
   final _openAI = OpenAI.instance.build(
-    token: '',
+    token: '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',
     baseOption: HttpSetup(
       receiveTimeout: const Duration(seconds: 60),
       connectTimeout: const Duration(seconds: 60),
     ),
   );
 
-  Future<String> getResponse(
-      List<Map<String, String>>? newList, String message, int sessionId) async {
+  Future<String> getResponse(List<Map<String, String>>? newList, String message,
+      int? sessionId) async {
     if (newList != null && isListGetted == 0) {
       isListGetted += 1;
 
@@ -61,7 +61,7 @@ class AIHandler {
         String listToJson = jsonEncode(list);
 
         //mise a jour de la liste dans la base de donnees
-        await _databaseManager.deleteSessionListe(sessionId);
+        await _databaseManager.deleteSessionListe(sessionId!);
         await _databaseManager.saveSessionListe(listToJson, sessionId);
         //var lister = await _databaseManager.getAllSessionsListe(sessionId);
         list.add({"role": "assistant", "content": reply});

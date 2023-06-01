@@ -10,9 +10,9 @@ import '../models/Session.dart';
 import '../providers/Database_Manager.dart';
 import '../providers/active_theme_provider.dart';
 import '../services/ai_handler.dart';
-import '../widgets/drawer_widget.dart';
 import '../widgets/expand_tile_topic.dart';
 import '../widgets/topics_suggestion_list.dart';
+import 'chatStory.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'home';
@@ -152,15 +152,21 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             const SizedBox(height: 20),
             Row(
-              children: const [
-                Text(
+              children: [
+                const Text(
                   "My History",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
                 ),
-                Spacer(),
-                Text(
-                  "See all",
-                  style: TextStyle(color: Colors.grey),
+                const Spacer(),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => ChatStory()));
+                  },
+                  child: const Text(
+                    "See all",
+                    style: TextStyle(color: Colors.grey),
+                  ),
                 )
               ],
             ),
@@ -215,9 +221,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Padding(
                                   padding: const EdgeInsets.all(20),
                                   child: Text(
-                                    messageIA.length > 50
-                                        ? '${messageIA.substring(0, 20)}...' // Ajoute des points de suspension si le texte est trop long
-                                        : messageIA,
+                                    session.name.length > 30
+                                        ? '${session.name.substring(0, 20)}...' // Ajoute des points de suspension si le texte est trop long
+                                        : session.name,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 19,
