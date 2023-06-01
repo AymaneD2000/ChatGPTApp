@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gpt_flutter/screens/setting_screen.dart';
 
-import '../providers/active_theme_provider.dart';
-import 'theme_switch.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      automaticallyImplyLeading: false,
       backgroundColor: Colors.transparent,
       elevation: 0,
       title: const Text(
