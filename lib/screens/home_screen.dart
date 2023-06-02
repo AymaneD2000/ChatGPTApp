@@ -1,16 +1,15 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gpt_flutter/models/Discussion.dart';
+
 import 'package:gpt_flutter/screens/chat_screen.dart';
-import 'package:gpt_flutter/screens/setting_screen.dart';
+
 import 'package:gpt_flutter/widgets/home_app_bar.dart';
 import '../models/Session.dart';
 import '../providers/Database_Manager.dart';
-import '../providers/active_theme_provider.dart';
+
 import '../services/ai_handler.dart';
-import '../widgets/expand_tile_topic.dart';
+
 import '../widgets/topics_suggestion_list.dart';
 import 'chatStory.dart';
 
@@ -308,8 +307,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 20),
             SizedBox(
-              height:
-                  300, // Ajustez la hauteur de la ListView selon vos besoins
+              height: MediaQuery.of(context).size.height *
+                  0.45, // Ajustez la hauteur de la ListView selon vos besoins
               child: ListView.builder(
                 controller: _scrollController,
                 itemCount: topics[selectIndex].suggestions.length,
