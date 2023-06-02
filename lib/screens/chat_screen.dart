@@ -5,15 +5,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:gpt_flutter/models/Discussion.dart';
 import 'package:gpt_flutter/models/chat_model.dart';
-import '../models/Session.dart';
+import 'package:gpt_flutter/widgets/suggestion_form.dart';
 import '../providers/Database_Manager.dart';
 import '../providers/chats_provider.dart';
 import '../services/ai_handler.dart';
 import '../services/session_name.dart';
-import '../widgets/Topics_Suggestion_List.dart';
 import '../widgets/chat_item.dart';
 
-import '../widgets/my_app_bar.dart';
 import '../widgets/text_and_voice_field.dart';
 import 'home_screen.dart';
 
@@ -169,54 +167,60 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Column(
         children: [
-          Expanded(
-            child: Consumer(builder: (context, ref, child) {
-              final chats = ref.watch(chatsProvider).reversed.toList();
-              List<ChatModel> thisListe = [];
-              thisListe.addAll(list);
-              //print(list.first.message);
-              if (list != null && list != []) {
-                if (giveList == 0) {
-                  giveList += 1;
-                  List<Map<String, String>> myList = [];
-                  for (int i = 0; i < thisListe.length; i++) {
-                    if (thisListe[i].isMe) {
-                      myList.add(
-                          {"role": "user", "content": thisListe[i].message});
-                      print(thisListe[i].message);
-                    } else {
-                      myList.add({
-                        "role": "assistant",
-                        "content": thisListe[i].message
-                      });
-                    }
+          Consumer(builder: (context, ref, child) {
+            final chats = ref.watch(chatsProvider).reversed.toList();
+            List<ChatModel> thisListe = [];
+            thisListe.addAll(list);
+            //print(list.first.message);
+            if (list != null && list != []) {
+              if (giveList == 0) {
+                giveList += 1;
+                List<Map<String, String>> myList = [];
+                for (int i = 0; i < thisListe.length; i++) {
+                  if (thisListe[i].isMe) {
+                    myList
+                        .add({"role": "user", "content": thisListe[i].message});
+                    print(thisListe[i].message);
+                  } else {
+                    myList.add(
+                        {"role": "assistant", "content": thisListe[i].message});
                   }
-                  lastChat.addAll(myList);
-
-                  print("Last chat a pour taille ${lastChat.length}");
-                  //aiHandler.getResponse(myList, "message", widget.sessionId);
                 }
+                lastChat.addAll(myList);
 
-                chats.addAll(list.reversed);
-                if (chats.isNotEmpty) {
-                  if (chats.last.isMe == false) {
-                    currentMessage = chats.last.message;
-                  }
+                print("Last chat a pour taille ${lastChat.length}");
+                //aiHandler.getResponse(myList, "message", widget.sessionId);
+              }
+
+              chats.addAll(list.reversed);
+              if (chats.isNotEmpty) {
+                if (chats.last.isMe == false) {
+                  currentMessage = chats.last.message;
                 }
               }
-              return chats.isEmpty
-                  ? firdtMessage(
-                      "Hi! You can send your message or get inspired from suggestion.")
-                  : ListView.builder(
+            }
+            return chats.isEmpty
+                ? Column(
+                    children: [
+                      firdtMessage(
+                          "Hi! You can send your message or get inspired from suggestion."),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height -
+                            MediaQuery.of(context).size.height * 0.4,
+                      )
+                    ],
+                  )
+                : Expanded(
+                    child: ListView.builder(
                       reverse: true,
                       itemCount: chats.length,
                       itemBuilder: (context, index) => ChatItem(
                         text: chats[index].message,
                         isMe: chats[index].isMe,
                       ),
-                    );
-            }),
-          ),
+                    ),
+                  );
+          }),
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: TextAndVoiceField(
@@ -233,7 +237,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget firdtMessage(String message) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.2,
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.width * 0.29,
       decoration: const BoxDecoration(color: Color.fromARGB(255, 40, 54, 40)),
       child: Column(
         children: [
@@ -242,9 +247,8 @@ class _ChatScreenState extends State<ChatScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const ProfileContainer(isMe: false),
-              //const SizedBox(width: 15),
               Container(
-                //padding: const EdgeInsets.all(15),
+                padding: const EdgeInsets.all(15),
                 constraints: BoxConstraints(
                   maxWidth: MediaQuery.of(context).size.width * 0.85,
                 ),
@@ -256,132 +260,39 @@ class _ChatScreenState extends State<ChatScreen> {
                           color: Theme.of(context).colorScheme.onSecondary,
                           fontSize: 18),
                     ),
-                    Container(
-                      child: TextButton.icon(
-                          onPressed: () {
-                            showModalBottomSheet(
-                                context: context,
-                                builder: (con) => _buildBottomSheet(con));
-                          },
-                          icon: Icon(Icons.sms_failed),
-                          label: Text("Suggestion")),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: TextButton.icon(
+                              onPressed: () {
+                                showModalBottomSheet(
+                                    context: context,
+                                    builder: (con) {
+                                      return SuggestionForm();
+                                    });
+                              },
+                              icon: const Icon(
+                                Icons.sms_failed,
+                                color: Colors.white,
+                              ),
+                              label: const Text(
+                                "Suggestion",
+                                style: TextStyle(color: Colors.white),
+                              )),
+                        )
+                      ],
                     )
                   ],
                 ),
               ),
-              // if (widget.isMe) const SizedBox(width: 15),
-              // if (widget.isMe) ProfileContainer(isMe: widget.isMe),
             ],
           ),
-        ],
-      ),
-    );
-  }
-
-  Container _buildBottomSheet(BuildContext cont) {
-    final ScrollController _scrollController = ScrollController();
-    int selectIndex = 0;
-    return Container(
-      height: MediaQuery.of(cont).size.height * 0.7,
-      padding: const EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black, width: 2.0),
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: ListView(
-        children: <Widget>[
-          const Text(
-            "Suggestion",
-            style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 15),
-          SizedBox(
-            width: double.infinity,
-            height: 40,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: topics.length,
-              itemBuilder: (cont, index) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectIndex = index;
-                    });
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.only(left: 15),
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: selectIndex == index
-                          ? Colors.blue
-                          : Colors
-                              .white10, // Change la couleur du conteneur si c'est la sélection actuelle
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: GestureDetector(
-                      child: Row(
-                        children: [
-                          Icon(topics[index].icon),
-                          const SizedBox(
-                            width: 4,
-                          ),
-                          Text(
-                            topics[index].topic,
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-          const SizedBox(height: 20),
-          SizedBox(
-            height: MediaQuery.of(cont).size.height *
-                0.7, // Ajustez la hauteur de la ListView selon vos besoins
-            child: ListView.builder(
-              controller: _scrollController,
-              itemCount: topics[selectIndex].suggestions.length,
-              itemBuilder: (cont, index) {
-                return GestureDetector(
-                  onTap: () async {
-                    int id =
-                        await _databaseManager.saveGlobalSession('sessionName');
-                    Session session = Session(id: id, name: 'sessionName');
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (cont) => ChatScreen(
-                          sessionId: session.id,
-                          messageTopics: topics[selectIndex]
-                              .suggestions[index]
-                              .suggestionPrompt,
-                        ),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 5),
-                    padding: const EdgeInsets.all(20),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.white12,
-                    ),
-                    child: Text(
-                      topics[selectIndex].suggestions[index].suggestions,
-                    ),
-                  ),
-                );
-              },
-            ),
-          )
         ],
       ),
     );
