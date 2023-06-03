@@ -68,13 +68,13 @@ class _TextAndVoiceFieldState extends ConsumerState<TextAndVoiceField> {
               },
               cursorColor: Theme.of(context).colorScheme.onPrimary,
               decoration: InputDecoration(
-                labelText: "As me some thing",
+                labelText: "Ask me some thing",
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Theme.of(context).colorScheme.onPrimary,
+                  borderSide: const BorderSide(
+                    color: Colors.transparent,
                   ),
                   borderRadius: BorderRadius.circular(12),
                 ),

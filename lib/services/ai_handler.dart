@@ -28,7 +28,7 @@ class AIHandler {
     }
   }
 
-  static var api = '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';
+  static var api = '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';
 
   final _openAI = OpenAI.instance.build(
     token: api,

@@ -7,6 +7,7 @@ import '../providers/Database_Manager.dart';
 import '../services/ai_handler.dart';
 import 'chat_screen.dart';
 import 'home_screen.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 class ChatStory extends StatefulWidget {
   const ChatStory({Key? key});
@@ -21,6 +22,20 @@ class _ChatStoryState extends State<ChatStory> {
   final DatabaseManager _databaseManager = DatabaseManager.instance;
   late Future<List<Session>> globalSessionsFuture;
   TextEditingController textControle = TextEditingController();
+
+  double keyboardHeight = 0;
+
+  void adjustContentPosition(bool isKeyboardVisible) {
+    if (isKeyboardVisible) {
+      setState(() {
+        keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+      });
+    } else {
+      setState(() {
+        keyboardHeight = 0;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -63,7 +78,7 @@ class _ChatStoryState extends State<ChatStory> {
                     Navigator.pop(context);
                   },
                   child: const Text(
-                    "Supprimer",
+                    "Delete",
                     style: TextStyle(color: Colors.red),
                   ),
                 ),
@@ -72,7 +87,7 @@ class _ChatStoryState extends State<ChatStory> {
                     Navigator.pop(context);
                   },
                   child: const Text(
-                    "Annuler",
+                    "Cancele",
                     style: TextStyle(color: Colors.blue),
                   ),
                 ),
@@ -252,9 +267,12 @@ class _ChatStoryState extends State<ChatStory> {
           ),
           const SizedBox(height: 16.0),
           GestureDetector(
-            onTap: () => showModalBottomSheet(
-                context: context,
-                builder: (context) => _renameStory(context, id)),
+            onTap: () {
+              showBottomSheet(
+                  context: context,
+                  builder: (context) => _renameStory(context, id));
+              Navigator.pop(context);
+            },
             child: Container(
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
@@ -308,7 +326,7 @@ class _ChatStoryState extends State<ChatStory> {
     );
   }
 
-  _renameStory(BuildContext context, int id) {
+  Container _renameStory(BuildContext context, int id) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.25,
       padding: const EdgeInsets.all(8.0),
@@ -321,7 +339,7 @@ class _ChatStoryState extends State<ChatStory> {
           Container(
             alignment: Alignment.center,
             child: const Text(
-              "Change the name",
+              "Rename",
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
@@ -330,46 +348,39 @@ class _ChatStoryState extends State<ChatStory> {
           ),
           const SizedBox(height: 16.0),
           Container(
+            decoration: BoxDecoration(
+              color: Colors.white10,
+              borderRadius: BorderRadius.circular(20),
+            ),
             alignment: Alignment.center,
+            padding: EdgeInsets.all(8),
             child: TextField(
-              decoration: InputDecoration(hintText: 'Write new name'),
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                hintText: 'Write new name',
+                border: InputBorder
+                    .none, // Ajout de cette ligne pour enlever le trait vertical
+              ),
               controller: textControle,
             ),
           ),
           const SizedBox(height: 8.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ElevatedButton(
-                onPressed: () async {
-                  await changeName(id, textControle.text);
-                  var result = _databaseManager.getAllGlobalSessions();
-                  setState(() {
-                    globalSessionsFuture = result;
-                  });
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  "OK",
-                  style: TextStyle(color: Colors.white),
-                ),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.blue,
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  "Cancel",
-                  style: TextStyle(color: Colors.white),
-                ),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.red,
-                ),
-              ),
-            ],
+          ElevatedButton(
+            onPressed: () async {
+              await changeName(id, textControle.text);
+              var result = _databaseManager.getAllGlobalSessions();
+              setState(() {
+                globalSessionsFuture = result;
+              });
+              Navigator.pop(context);
+            },
+            child: const Text(
+              "Confirm",
+              style: TextStyle(color: Colors.white),
+            ),
+            style: ElevatedButton.styleFrom(
+              primary: Colors.blue,
+            ),
           ),
         ],
       ),

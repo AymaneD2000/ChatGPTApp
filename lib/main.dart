@@ -1,6 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:gpt_flutter/screens/home_screen.dart';
 import 'package:gpt_flutter/screens/launch_sceen.dart';
 
 import 'providers/active_theme_provider.dart';
@@ -26,7 +25,7 @@ class App extends ConsumerWidget {
       darkTheme: darkTheme,
       debugShowCheckedModeBanner: false,
       themeMode: activeTheme == Themes.dark ? ThemeMode.dark : ThemeMode.light,
-      home: LaunchScreen(),
+      home: const LaunchScreen(),
     );
   }
 }
