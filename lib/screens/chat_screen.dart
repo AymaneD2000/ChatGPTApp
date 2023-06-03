@@ -82,6 +82,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     final db = DatabaseManager.instance;
     return Scaffold(
+      bottomSheet: _buildBottomSheet(context),
       backgroundColor: Colors.white10,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -112,7 +113,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   } else {
                     SessionName name = SessionName();
                     String title = await name.getResponse(
-                        "give a expert title cool ans short for this tense tense :${result.first.userMessage}");
+                        "give a simple title cool and short for this tense tense :${result.first.userMessage}");
                     db.updateGlobalSession(widget.sessionId, title.toString());
                   }
                   _closeSession;
@@ -159,11 +160,6 @@ class _ChatScreenState extends State<ChatScreen> {
                 icon: const Icon(Icons.volume_up)),
           ],
         ),
-        actions: [
-          Row(
-            children: [],
-          )
-        ],
       ),
       body: Column(
         children: [
@@ -200,15 +196,19 @@ class _ChatScreenState extends State<ChatScreen> {
               }
             }
             return chats.isEmpty
-                ? Column(
-                    children: [
-                      firdtMessage(
-                          "Hi! You can send your message or get inspired from suggestion."),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height -
-                            MediaQuery.of(context).size.height * 0.4,
-                      )
-                    ],
+                ? SingleChildScrollView(
+                    child: Expanded(
+                      child: Column(
+                        children: [
+                          firdtMessage(
+                              "Hi! You can send your message or get inspired from suggestion."),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height -
+                                MediaQuery.of(context).size.height * 0.47,
+                          )
+                        ],
+                      ),
+                    ),
                   )
                 : Expanded(
                     child: ListView.builder(
@@ -221,15 +221,15 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   );
           }),
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: TextAndVoiceField(
-              lastChat,
-              id: widget.sessionId,
-              message: widget.messageTopics,
-            ),
-          ),
-          const SizedBox(height: 10),
+          // Padding(
+          //   padding: const EdgeInsets.all(12.0),
+          //   child: TextAndVoiceField(
+          //     lastChat,
+          //     id: widget.sessionId,
+          //     message: widget.messageTopics,
+          //   ),
+          // ),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.121),
         ],
       ),
     );
@@ -238,7 +238,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget firdtMessage(String message) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.width * 0.29,
+      height: MediaQuery.of(context).size.width * 0.34,
       decoration: const BoxDecoration(color: Color.fromARGB(255, 40, 54, 40)),
       child: Column(
         children: [
@@ -294,6 +294,25 @@ class _ChatScreenState extends State<ChatScreen> {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Container _buildBottomSheet(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.12,
+      padding: const EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.white10,
+          width: 2.0,
+        ),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: TextAndVoiceField(
+        lastChat,
+        id: widget.sessionId,
+        message: widget.messageTopics,
       ),
     );
   }

@@ -1,15 +1,17 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gpt_flutter/models/Discussion.dart';
 import 'package:gpt_flutter/screens/chat_screen.dart';
-
+import 'package:gpt_flutter/screens/setting_screen.dart';
 import 'package:gpt_flutter/widgets/home_app_bar.dart';
+import '../constants/const.dart';
 import '../models/Session.dart';
 import '../providers/Database_Manager.dart';
-
+import '../providers/active_theme_provider.dart';
 import '../services/ai_handler.dart';
-
+import '../widgets/expand_tile_topic.dart';
 import '../widgets/topics_suggestion_list.dart';
 import 'chatStory.dart';
 
@@ -25,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final DatabaseManager _databaseManager = DatabaseManager.instance;
   late Future<List<Session>> globalSessionsFuture;
   final ScrollController _scrollController = ScrollController();
-
+  final FirebaseMangement firebaseMangement = FirebaseMangement();
   @override
   void dispose() {
     aiHandler.dispose();
@@ -33,14 +35,23 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  Future<String>? apikey;
+
+  void getKey() async {
+    AIHandler.api = await firebaseMangement.getAdmin();
+  }
+
   @override
   void initState() {
     super.initState();
+    //firebaseMangement.writeData();
+    getKey();
     globalSessionsFuture = _databaseManager.getAllGlobalSessions();
   }
 
   void _openSession() async {
     int id = await _databaseManager.saveGlobalSession('sessionName');
+    //AIHandler.api = await apikey!;
     Session session = Session(id: id, name: 'sessionName');
     Navigator.pushReplacement(
       context,
@@ -179,10 +190,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 } else if (globalSnapshot.hasError) {
                   return const Center(
-                    child: Text('Error.'),
+                    child: Text('Erreur.'),
                   );
                 } else if (globalSnapshot.hasData) {
                   final globalSessions = globalSnapshot.data!;
+
+                  if (globalSessions.isEmpty) {
+                    return const Center(
+                      child: Text('No conversation found'),
+                    );
+                  }
+
                   return SizedBox(
                     height: MediaQuery.of(context).size.height * 0.16,
                     width: double.infinity,
@@ -196,15 +214,23 @@ class _HomeScreenState extends State<HomeScreen> {
                             ? discussions.first.aiReply
                             : '';
 
+                        if (session.discussions!.length == null ||
+                            session.discussions!.length == []) {
+                          _databaseManager.deleteGlobalSession(session.id);
+                        }
+
                         return GestureDetector(
-                          onTap: () {
+                          onTap: () async {
+                            //AIHandler.api = await apikey!;
                             Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ChatScreen(
-                                          sessionId: session.id,
-                                          list: session.discussions,
-                                        )));
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ChatScreen(
+                                  sessionId: session.id,
+                                  list: session.discussions,
+                                ),
+                              ),
+                            );
                           },
                           child: Container(
                             margin: const EdgeInsets.only(right: 15),
@@ -231,7 +257,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                                 const Text(
-                                  "See your recent conversation",
+                                  "Voir vos conversations récentes",
                                   style: TextStyle(
                                     fontSize: 10,
                                     color: Colors.grey,
@@ -246,7 +272,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 } else {
                   return const Center(
-                    child: Text('No conversation found'),
+                    child: Text('Aucune conversation trouvée'),
                   );
                 }
               },
@@ -308,13 +334,14 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 20),
             SizedBox(
               height: MediaQuery.of(context).size.height *
-                  0.45, // Ajustez la hauteur de la ListView selon vos besoins
+                  0.47, // Ajustez la hauteur de la ListView selon vos besoins
               child: ListView.builder(
                 controller: _scrollController,
                 itemCount: topics[selectIndex].suggestions.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () async {
+                      //AIHandler.api = await apikey!;
                       int id = await _databaseManager
                           .saveGlobalSession('sessionName');
                       Session session = Session(id: id, name: 'sessionName');
