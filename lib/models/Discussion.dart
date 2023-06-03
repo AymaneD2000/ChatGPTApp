@@ -1,3 +1,4 @@
+// ignore: file_names
 class Discussion {
   int id;
   String userMessage;

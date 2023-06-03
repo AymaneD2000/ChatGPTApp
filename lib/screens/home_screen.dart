@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     //firebaseMangement.writeData();
-    getKey();
+    //getKey();
     globalSessionsFuture = _databaseManager.getAllGlobalSessions();
   }
 

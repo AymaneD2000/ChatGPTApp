@@ -29,6 +29,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   bool isSpeacking = false;
+  GlobalKey _containerKey = GlobalKey();
   DatabaseManager _databaseManager = DatabaseManager.instance;
   late FlutterTts text_to_speech;
   Future _speack(String texte) async {
@@ -83,9 +84,9 @@ class _ChatScreenState extends State<ChatScreen> {
     final db = DatabaseManager.instance;
     return Scaffold(
       bottomSheet: _buildBottomSheet(context),
-      backgroundColor: Colors.white10,
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white10,
         automaticallyImplyLeading: false,
         title: Row(
           children: [
@@ -190,8 +191,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
               chats.addAll(list.reversed);
               if (chats.isNotEmpty) {
-                if (chats.last.isMe == false) {
-                  currentMessage = chats.last.message;
+                print(!chats.first.isMe);
+                if (!chats.first.isMe) {
+                  currentMessage = chats.first.message;
                 }
               }
             }
@@ -238,7 +240,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget firdtMessage(String message) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.width * 0.34,
+      height: MediaQuery.of(context).size.width * 0.37,
       decoration: const BoxDecoration(color: Color.fromARGB(255, 40, 54, 40)),
       child: Column(
         children: [
@@ -266,6 +268,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           child: Container(),
                         ),
                         Container(
+                          margin: EdgeInsets.only(top: 10),
                           decoration: BoxDecoration(
                               color: Colors.black,
                               borderRadius: BorderRadius.circular(10)),
@@ -300,6 +303,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Container _buildBottomSheet(BuildContext context) {
     return Container(
+      key: _containerKey, // Ajout de la clé
       height: MediaQuery.of(context).size.height * 0.12,
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
