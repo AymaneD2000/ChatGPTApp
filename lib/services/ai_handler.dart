@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
+import 'package:gpt_flutter/constants/const.dart';
 
 import '../providers/Database_Manager.dart';
 
@@ -10,7 +11,7 @@ class AIHandler {
   final DatabaseManager _databaseManager = DatabaseManager.instance;
   List<List<String>> conversationSessions = [];
   bool isSessionOpen = false;
-
+  FirebaseMangement manage = FirebaseMangement();
   List<String> currentSession = [];
   List<Map<String, String>> list = [];
   int isListGetted = 0;
@@ -27,9 +28,10 @@ class AIHandler {
     }
   }
 
+  static var api = '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';
+
   final _openAI = OpenAI.instance.build(
-    //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
-    token: '',
+    token: api,
     baseOption: HttpSetup(
       receiveTimeout: const Duration(seconds: 60),
       connectTimeout: const Duration(seconds: 60),

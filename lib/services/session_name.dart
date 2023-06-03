@@ -1,9 +1,11 @@
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 
+import 'ai_handler.dart';
+
 class SessionName {
   List<Map<String, String>> list = [];
   final _openAI = OpenAI.instance.build(
-    token: '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',
+    token: AIHandler.api,
     baseOption: HttpSetup(
       receiveTimeout: const Duration(seconds: 60),
       connectTimeout: const Duration(seconds: 60),

@@ -20,6 +20,7 @@ class _ChatStoryState extends State<ChatStory> {
   final AIHandler aiHandler = AIHandler();
   final DatabaseManager _databaseManager = DatabaseManager.instance;
   late Future<List<Session>> globalSessionsFuture;
+  TextEditingController textControle = TextEditingController();
 
   @override
   void initState() {
@@ -120,6 +121,13 @@ class _ChatStoryState extends State<ChatStory> {
               );
             } else if (globalSnapshot.hasData) {
               final globalSessions = globalSnapshot.data!;
+
+              if (globalSessions.isEmpty) {
+                return const Center(
+                  child: Text('No conversation found'),
+                );
+              }
+
               return SizedBox(
                 width: double.infinity,
                 child: ListView.builder(
@@ -133,6 +141,7 @@ class _ChatStoryState extends State<ChatStory> {
                         : "";
                     final messageIA =
                         discussions.isNotEmpty ? discussions.first.aiReply : '';
+
                     return GestureDetector(
                       onTap: () {
                         Navigator.pushReplacement(
@@ -168,9 +177,7 @@ class _ChatStoryState extends State<ChatStory> {
                                     size: 30,
                                   ),
                                 ),
-                                const SizedBox(
-                                  width: 5,
-                                )
+                                const SizedBox(width: 5),
                               ],
                             ),
                             Padding(
@@ -222,21 +229,21 @@ class _ChatStoryState extends State<ChatStory> {
 
   Container _buildBottomSheet(BuildContext context, int id) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.3,
+      height: MediaQuery.of(context).size.height * 0.25,
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.transparent,
           width: 2.0,
         ),
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: ListView(
         children: <Widget>[
           Container(
             alignment: Alignment.center,
             child: const Text(
-              "Choisir une action",
+              "Choose action",
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
@@ -259,7 +266,7 @@ class _ChatStoryState extends State<ChatStory> {
                   const SizedBox(width: 8.0),
                   GestureDetector(
                     child: const Text(
-                      "Renommer",
+                      "Rename",
                       style: TextStyle(
                         fontSize: 16.0,
                       ),
@@ -284,9 +291,9 @@ class _ChatStoryState extends State<ChatStory> {
                     Icons.delete,
                     color: Colors.red,
                   ),
-                  const SizedBox(width: 8.0),
-                  const Text(
-                    "Supprimer",
+                  SizedBox(width: 8.0),
+                  Text(
+                    "Delete",
                     style: TextStyle(
                       fontSize: 16.0,
                       color: Colors.red,
@@ -302,7 +309,6 @@ class _ChatStoryState extends State<ChatStory> {
   }
 
   _renameStory(BuildContext context, int id) {
-    TextEditingController _textControle = TextEditingController();
     return Container(
       height: MediaQuery.of(context).size.height * 0.25,
       padding: const EdgeInsets.all(8.0),
@@ -326,7 +332,8 @@ class _ChatStoryState extends State<ChatStory> {
           Container(
             alignment: Alignment.center,
             child: TextField(
-              controller: _textControle,
+              decoration: InputDecoration(hintText: 'Write new name'),
+              controller: textControle,
             ),
           ),
           const SizedBox(height: 8.0),
@@ -335,9 +342,9 @@ class _ChatStoryState extends State<ChatStory> {
             children: [
               ElevatedButton(
                 onPressed: () async {
-                  await changeName(id, _textControle.text);
+                  await changeName(id, textControle.text);
                   var result = _databaseManager.getAllGlobalSessions();
-                  setState(() async {
+                  setState(() {
                     globalSessionsFuture = result;
                   });
                   Navigator.pop(context);
@@ -355,8 +362,11 @@ class _ChatStoryState extends State<ChatStory> {
                   Navigator.pop(context);
                 },
                 child: const Text(
-                  "Annuler",
-                  style: TextStyle(color: Colors.red),
+                  "Cancel",
+                  style: TextStyle(color: Colors.white),
+                ),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.red,
                 ),
               ),
             ],
